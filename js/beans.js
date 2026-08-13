@@ -25,7 +25,7 @@ var Beans = (function () {
   /* Рот для каждого настроения */
   var MOUTH = {
     // широкая открытая улыбка (полукруг вниз)
-    5: '<path d="M32 58 A19 19 0 0 1 68 58 Z" fill="' + FACE + '"/>' +
+    5: '<path d="M32 58 A19 19 0 0 0 68 58 Z" fill="' + FACE + '"/>' +
        '<path d="M32 58 H68" stroke="' + FACE + '" stroke-width="3" stroke-linecap="round"/>',
     // спокойная улыбка
     4: '<path d="M39 60 Q50 69 61 60" fill="none" stroke="' + FACE + '" stroke-width="4.2" stroke-linecap="round"/>',
