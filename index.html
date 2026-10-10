@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Стратегический маркетинг</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%232F4BD1' stroke-width='5'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%232F4BD1'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script>
+  try{var t=(JSON.parse(localStorage.getItem('smk.progress.v1'))||{}).theme;if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}
+</script>
+<style>
+  .lock{min-height:100vh;display:grid;place-items:center;padding:24px 16px;box-sizing:border-box}
+  .lock-box{width:100%;max-width:420px;display:grid;gap:18px}
+  .lock-mark{width:40px;height:40px}
+  .lock h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,6vw,38px);line-height:1.08;margin:0;text-wrap:balance}
+  .lock p{margin:0;color:var(--ink-2)}
+  .lock form{display:grid;gap:12px}
+  .lock label{font-weight:600;font-size:15px}
+  .lock input[type=password]{font:inherit;font-size:18px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box}
+  .lock input[type=password]:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .lock .rem{display:flex;gap:8px;align-items:center;font-weight:400;font-size:15px;color:var(--ink-2)}
+  .lock .err{color:var(--bad);min-height:1.4em;font-size:15px}
+  .lock button{font:inherit;font-weight:600;font-size:17px;padding:12px 18px;border:0;border-radius:var(--radius);background:var(--accent);color:var(--on-accent);cursor:pointer;justify-self:start}
+  .lock button:disabled{opacity:.6;cursor:wait}
+</style>
+</head>
+<body>
+<a class="sr" href="#main">К содержимому</a>
+<div id="app">
+  <main class="lock" id="main">
+    <div class="lock-box">
+      <svg class="lock-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="var(--accent)" stroke-width="5"/><circle cx="16" cy="16" r="5" fill="var(--accent)"/></svg>
+      <h1>Стратегический маркетинг</h1>
+      <p>Личный тренажёр. Материалы зашифрованы и открываются только по паролю.</p>
+      <form id="gate-form" autocomplete="on">
+        <label for="gate-pass">Пароль</label>
+        <input id="gate-pass" name="password" type="password" autocomplete="current-password" required>
+        <label class="rem"><input id="gate-rem" type="checkbox" checked> Запомнить на этом устройстве</label>
+        <div class="err" id="gate-err" aria-live="polite"></div>
+        <button id="gate-btn" type="submit">Открыть</button>
+      </form>
+    </div>
+  </main>
+</div>
+<noscript><p style="padding:40px">Для работы тренажёра нужен JavaScript.</p></noscript>
+<script>
+(function () {
+  var KEYSTORE = 'smk.key.v1';
+  var b64 = function (s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); };
+  var toB64 = function (buf) { return btoa(String.fromCharCode.apply(null, new Uint8Array(buf))); };
+  var bundleP = fetch('bundle.enc.json', { cache: 'no-cache' }).then(function (r) { return r.json(); });
+
+  function run(plain) {
+    var s = document.createElement('script');
+    s.textContent = plain;
+    document.body.appendChild(s);
+  }
+  function decryptWith(key, bundle) {
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(bundle.iv) }, key, b64(bundle.data)).then(function (buf) {
+      return new TextDecoder().decode(buf);
+    });
+  }
+  function deriveKey(pass, bundle) {
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']).then(function (base) {
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: b64(bundle.salt), iterations: bundle.iter, hash: 'SHA-256' },
+        base, { name: 'AES-GCM', length: 256 }, true, ['decrypt']
+      );
+    });
+  }
+
+  // Сохранённый ключ: открываем без пароля
+  var saved = null;
+  try { saved = localStorage.getItem(KEYSTORE); } catch (e) {}
+  if (saved) {
+    bundleP.then(function (bundle) {
+      var stored = JSON.parse(saved);
+      if (stored.salt !== bundle.salt) throw new Error('stale');
+      return crypto.subtle.importKey('raw', b64(stored.k), 'AES-GCM', false, ['decrypt']).then(function (key) { return decryptWith(key, bundle); });
+    }).then(run).catch(function () { try { localStorage.removeItem(KEYSTORE); } catch (e) {} });
+  }
+
+  var form = document.getElementById('gate-form');
+  var err = document.getElementById('gate-err');
+  var btn = document.getElementById('gate-btn');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Открываю…';
+    var pass = document.getElementById('gate-pass').value;
+    var remember = document.getElementById('gate-rem').checked;
+    bundleP.then(function (bundle) {
+      return deriveKey(pass, bundle).then(function (key) {
+        return decryptWith(key, bundle).then(function (plain) {
+          if (remember) {
+            return crypto.subtle.exportKey('raw', key).then(function (raw) {
+              try { localStorage.setItem(KEYSTORE, JSON.stringify({ salt: bundle.salt, k: toB64(raw) })); } catch (e) {}
+              return plain;
+            });
+          }
+          return plain;
+        });
+      });
+    }).then(run).catch(function () {
+      err.textContent = 'Пароль не подошёл. Проверь раскладку и регистр.';
+      btn.disabled = false;
+      btn.textContent = 'Открыть';
+    });
+  });
+})();
+</script>
+</body>
+</html>
