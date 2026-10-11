@@ -359,3 +359,41 @@ main{outline:none}
 .imp-text{margin-top:18px}
 .imp-text summary{cursor:pointer;font-weight:600}
 .imp-text textarea{width:100%;box-sizing:border-box;margin-top:10px;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
+
+/* --- урок по одному шагу --- */
+.stepnav{display:flex;align-items:center;gap:14px;margin:22px 0 10px}
+.stepnav .stepbar{flex:1;margin:0}
+.stepbar .sb{flex:1;height:6px;border:0;border-radius:3px;background:var(--line);padding:0;cursor:default;min-width:6px}
+.stepbar .sb.on{background:var(--ink-3);cursor:pointer}
+.stepbar .sb.on.is-q{background:var(--accent);opacity:.55}
+.stepbar .sb.is-cur{opacity:1;background:var(--accent);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--accent)}
+.stepbar .sb:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.step-count{font-size:14px;color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.lesson .steps .step{border-top:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-l);padding:26px 24px;min-height:220px;scroll-margin-top:80px}
+.lesson .steps .step-hook .step-body{font-size:21px}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pager .wait{margin:0;margin-left:auto}
+.pager .btn-primary{margin-left:auto}
+.l-end .done-box{margin-top:18px}
+.done-box h2{margin:0 0 8px;font-size:20px}
+@media (max-width:640px){.lesson .steps .step{padding:20px 16px}.stepnav{gap:10px}}
+
+/* --- термины --- */
+.term{border-bottom:1.5px dotted var(--accent);cursor:help;color:inherit}
+.term:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.term-pop{position:absolute;z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;font-size:15px;line-height:1.5;box-sizing:border-box}
+.term-pop .gl-t{font-weight:700;margin-bottom:4px}
+.term-pop .gl-d{color:var(--ink-2)}
+.gl-more{display:inline-block;margin-top:6px;font-size:14px;color:var(--accent)}
+.q-terms{margin:10px 0 14px;font-size:15px}
+.q-terms summary{cursor:pointer;color:var(--accent);font-weight:600;width:fit-content}
+.q-terms dl{margin:10px 0 0;display:grid;gap:10px;padding:12px 14px;background:var(--sunk);border-radius:var(--radius)}
+.q-terms dt{font-weight:700}
+.q-terms dd{margin:2px 0 0;color:var(--ink-2)}
+.gl-search{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);margin:6px 0 18px}
+.gl-list{margin:0;display:grid;gap:4px}
+.gl-item{padding:12px 0;border-bottom:1px solid var(--line)}
+.gl-item dt{font-weight:700}
+.gl-item dd{margin:4px 0 0;color:var(--ink-2)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.boss-hud{gap:12px;flex-wrap:wrap}
