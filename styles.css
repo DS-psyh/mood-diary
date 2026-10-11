@@ -397,3 +397,9 @@ main{outline:none}
 .gl-item dd{margin:4px 0 0;color:var(--ink-2)}
 .btn-sm{padding:6px 12px;font-size:13px}
 .boss-hud{gap:12px;flex-wrap:wrap}
+.peek{margin:4px 0 14px;font-size:15px}
+.peek summary{cursor:pointer;color:var(--ink-2);font-weight:600;width:fit-content}
+.peek summary:hover{color:var(--accent)}
+.peek-body{margin-top:10px;padding:14px 16px;border-left:3px solid var(--line);background:var(--sunk);border-radius:0 var(--radius) var(--radius) 0;font-size:15px}
+.peek-body h4{margin:12px 0 4px}
+.peek-body table{font-size:14px}
