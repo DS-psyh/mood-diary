@@ -420,3 +420,7 @@ main{outline:none}
 .build-fb{font-size:14.5px;color:var(--ink-2);margin-top:8px}
 .build-fb:empty{display:none}
 .build-fb p{margin:4px 0}
+.build-need{font-size:14px;color:var(--ink-2);margin:-4px 0 10px 34px;line-height:1.45}
+.build-o .opt-t{display:flex;flex-direction:column;gap:3px}
+.build-o .ol{display:block}
+.build-o .ol-k{font-weight:600;color:var(--ink-2)}
